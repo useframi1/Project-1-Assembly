@@ -3,63 +3,73 @@
 #include <string>
 using namespace std;
 
-//Assume that wordTye is lowercase char 
-void displayInst(char wordType, vector<int> partsOfTheWord);
-void displayR(vector<int> partsOfTheWord, string ABIname[]);
-void displayI(char wordType, vector<int> partsOfTheWord, string ABIname[]);
-void displayS(vector<int> partsOfTheWord, string ABIname[]);
-void displayB(vector<int> partsOfTheWord, string ABIname[]);
-void displayU(vector<int> partsOfTheWord, string ABIname[]);
-void displayJ(vector<int> partsOfTheWord, string ABIname[]);
+struct Instruction
+{
+    int func7;
+    int rd;
+    int rs1;
+    int rs2;
+    int func3;
+    int immediate;
+    char type;
+};
+
+void displayInst(Instruction);
+void displayR(Instruction, string ABIname[]);
+void displayI(Instruction, string ABIname[]);
+void displayS(Instruction, string ABIname[]);
+void displayB(Instruction, string ABIname[]);
+void displayU(Instruction, string ABIname[]);
+void displayJ(Instruction, string ABIname[]);
 
 int main()
 {
-    vector<int> InstR = {8,0,8,9,0}; //rd, funct3, rs1, rs2, funct7
-    vector<int> InstI = {6,5,8,1038}; //rd, funct3, rs1, imm
-    vector<int> Instl = {6,5,8,8}; //rd, funct3, rs1, imm
-    vector<int> Inste = {6,0,8,0}; //rd, funct3, rs1, imm
-    vector<int> InstS = {2,30,28,16}; //funct3, rs1, rs2, imm
-    vector<int> InstB = {1,0,0,500}; //funct3, rs1, rs2, imm
-    vector<int> InstU = {55,5,554580}; //opcode, rd, imm
-    vector<int> InstJ = {1,1}; //rd, imm
-    displayInst('r',InstR);
-    displayInst('i',InstI);
-    displayInst('l',Instl);
-    displayInst('e',Inste);
-    displayInst('s',InstS);
-    displayInst('b',InstB);
-    displayInst('u',InstU);
-    displayInst('j',InstJ);
+    Instruction InstR = {0,8,8,9,0,0,'r'};
+    Instruction InstI = {0,6,8,0,5,1038,'i'};
+    Instruction Instl = {0,6,8,0,5,8,'l'};
+    Instruction Inste = {0,6,8,0,0,0,'e'};
+    Instruction InstS = {0,0,30,28,2,16,'s'};
+    Instruction InstB = {0,0,0,0,1,500,'b'};
+    Instruction InstU = {0,5,0,0,0,554580,'u'};
+    Instruction InstJ = {0,1,0,0,0,1,'j'};
+    displayInst(InstR);
+    displayInst(InstI);
+    displayInst(Instl);
+    displayInst(Inste);
+    displayInst(InstS);
+    displayInst(InstB);
+    displayInst(InstU);
+    displayInst(InstJ);
     return 0;
 }
 
-void displayInst(char wordType, vector<int> partsOfTheWord)
+void displayInst(Instruction Inst)
 {
     string ABIname[32] = {"zero", "ra", "sp", "gp", "tp", "t0", "t1", "t2", "s0", "s1", 
                             "a0", "a1", "a2", "a3", "a4", "a5", "a6", "a7", "s2", "s3", 
                             "s4", "s5", "s6", "s7", "s8", "s9", "s10", "s11", "t3", "t4", 
                             "t5", "t6"};
-    switch(wordType){
+    switch(Inst.type){
         case 'r':
-            displayR(partsOfTheWord, ABIname);
+            displayR(Inst, ABIname);
             break;
         case 'i':
         case 'l':
         case 'e':
         case 'q':
-            displayI(wordType, partsOfTheWord, ABIname);
+            displayI(Inst, ABIname);
             break;
         case 's':
-            displayS(partsOfTheWord, ABIname);
+            displayS(Inst, ABIname);
             break;
         case 'b':
-            displayB(partsOfTheWord, ABIname);
+            displayB(Inst, ABIname);
             break;
         case 'u':
-            displayU(partsOfTheWord, ABIname);
+            displayU(Inst, ABIname);
             break;
         case 'j':
-            displayJ(partsOfTheWord, ABIname);
+            displayJ(Inst, ABIname);
             break;
         default:
             cout << "ERROR: Type unknown";
@@ -67,13 +77,13 @@ void displayInst(char wordType, vector<int> partsOfTheWord)
     }
 }
 
-void displayR(vector<int> partsOfTheWord, string ABIname[])
-{   //rd, funct3, rs1, rs2, funct7
-string print = " " + ABIname[partsOfTheWord[0]] + ", " + ABIname[partsOfTheWord[2]] + ", " + ABIname[partsOfTheWord[3]];
-    switch(partsOfTheWord[1])
+void displayR(Instruction Inst, string ABIname[])
+{   
+string print = " " + ABIname[Inst.rd] + ", " + ABIname[Inst.rs1] + ", " + ABIname[Inst.rs2];
+    switch(Inst.func3)
     {
         case 0:
-            if(partsOfTheWord[4] == 0)
+            if(Inst.func7 == 0)
                 print = "add" + print;
             else
                 print = "sub" + print;
@@ -92,7 +102,7 @@ string print = " " + ABIname[partsOfTheWord[0]] + ", " + ABIname[partsOfTheWord[
             print = "sll" + print;
             break;
         case 5:
-            if(partsOfTheWord[4] == 0)
+            if(Inst.func7 == 0)
                 print = "srl" + print;
             else
                 print = "sra" + print;
@@ -110,18 +120,18 @@ string print = " " + ABIname[partsOfTheWord[0]] + ", " + ABIname[partsOfTheWord[
     cout << print << endl;
 }
 
-void displayI(char wordType, vector<int> partsOfTheWord, string ABIname[])
-{   //rd, funct3, rs1, imm
+void displayI(Instruction Inst, string ABIname[])
+{
     string print;
-    switch(wordType)
+    switch(Inst.type)
     {
         case 'i':
         case 'q':
-            print = " " + ABIname[partsOfTheWord[0]] + ", " + ABIname[partsOfTheWord[2]] + ", " + to_string(partsOfTheWord[3]);
-            switch(partsOfTheWord[1])
+            print = " " + ABIname[Inst.rd] + ", " + ABIname[Inst.rs1] + ", " + to_string(Inst.immediate);
+            switch(Inst.func3)
             {
                 case 0:
-                    if(wordType == 'i')
+                    if(Inst.type == 'i')
                         print = "addi" + print;
                     else
                         print = "jalr" + print;
@@ -139,8 +149,8 @@ void displayI(char wordType, vector<int> partsOfTheWord, string ABIname[])
                     print = "slli" + print;
                     break;
                 case 5:
-                    if(partsOfTheWord[3] > 32)
-                        print = "srai " + ABIname[partsOfTheWord[0]] + ", " + ABIname[partsOfTheWord[2]] + ", " + to_string(partsOfTheWord[3]-1024);
+                    if(Inst.immediate > 32)
+                        print = "srai " + ABIname[Inst.rd] + ", " + ABIname[Inst.rs1] + ", " + to_string(Inst.immediate-1024);
                     else
                         print = "srli" + print;
                     break;
@@ -157,8 +167,8 @@ void displayI(char wordType, vector<int> partsOfTheWord, string ABIname[])
             break;
         
         case 'l':
-            print = " " + ABIname[partsOfTheWord[0]] + ", (" + to_string(partsOfTheWord[3]) + ")" + ABIname[partsOfTheWord[2]];
-            switch(partsOfTheWord[1])
+            print = " " + ABIname[Inst.rd] + ", (" + to_string(Inst.immediate) + ")" + ABIname[Inst.rs1];
+            switch(Inst.func3)
             {
                 case 0:
                     print = "lb" + print;
@@ -182,18 +192,7 @@ void displayI(char wordType, vector<int> partsOfTheWord, string ABIname[])
             break;
 
         case 'e':
-            switch(partsOfTheWord[3])
-            {
-                case 0:
-                    print = "ecall";
-                    break;
-                case 1:
-                    print = "ebreak";
-                    break;
-                default:
-                    cout << "ERROR: Type unknown";
-                    return;
-            }
+            print = "ecall";
             break;
         default:
             cout << "ERROR: Type unknown";
@@ -203,10 +202,10 @@ void displayI(char wordType, vector<int> partsOfTheWord, string ABIname[])
     cout << print << endl;
 }
 
-void displayS(vector<int> partsOfTheWord, string ABIname[])
-{ //funct3, rs1, rs2, imm
-    string print = " " + ABIname[partsOfTheWord[2]] + ", (" + to_string(partsOfTheWord[3]) + ")" + ABIname[partsOfTheWord[1]];
-    switch(partsOfTheWord[0])
+void displayS(Instruction Inst, string ABIname[])
+{ 
+    string print = " " + ABIname[Inst.rs2] + ", (" + to_string(Inst.immediate) + ")" + ABIname[Inst.rs1];
+    switch(Inst.func3)
     {
         case 0:
             print = "sb" + print;
@@ -225,10 +224,10 @@ void displayS(vector<int> partsOfTheWord, string ABIname[])
     cout << print << endl;
 }
 
-void displayB(vector<int> partsOfTheWord, string ABIname[])
-{    //funct3, rs1, rs2, imm
-    string print = " " + ABIname[partsOfTheWord[1]] + ", " + ABIname[partsOfTheWord[2]] + ", " + to_string(partsOfTheWord[3]);
-    switch(partsOfTheWord[0])
+void displayB(Instruction Inst, string ABIname[])
+{  
+    string print = " " + ABIname[Inst.rs1] + ", " + ABIname[Inst.rs2] + ", " + to_string(Inst.immediate);
+    switch(Inst.func3)
     {
         case 0:
             print = "beq" + print;
@@ -255,15 +254,15 @@ void displayB(vector<int> partsOfTheWord, string ABIname[])
     cout << print << endl;
 }
 
-void displayU(vector<int> partsOfTheWord, string ABIname[])
+void displayU(Instruction Inst, string ABIname[])
 {    //opcode, rd, imm
-    string print = " " + ABIname[partsOfTheWord[1]] + ", " + to_string(partsOfTheWord[2]);
-    switch(partsOfTheWord[0])
+    string print = " " + ABIname[Inst.rd] + ", " + to_string(Inst.immediate);
+    switch(Inst.func7)
     {
-        case 55:
+        case 1:
             print = "lui" + print;
             break;
-        case 23:
+        case 0:
             print = "auipc" + print;
             break;
         default:
@@ -273,8 +272,8 @@ void displayU(vector<int> partsOfTheWord, string ABIname[])
     cout << print << endl;
 }
 
-void displayJ(vector<int> partsOfTheWord, string ABIname[])
+void displayJ(Instruction Inst, string ABIname[])
 {   //rd, imm
-    string print = "jal " + ABIname[partsOfTheWord[0]] + ", " + to_string(partsOfTheWord[1]);
+    string print = "jal " + ABIname[Inst.rd] + ", " + to_string(Inst.immediate);
     cout << print << endl;
 }
