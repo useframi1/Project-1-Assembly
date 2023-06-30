@@ -42,6 +42,7 @@ void displayInst(char wordType, vector<int> partsOfTheWord)
         case 'i':
         case 'l':
         case 'e':
+        case 'q':
             displayI(wordType, partsOfTheWord);
             break;
         case 's':
@@ -56,6 +57,9 @@ void displayInst(char wordType, vector<int> partsOfTheWord)
         case 'j':
             displayJ(partsOfTheWord);
             break;
+        default:
+            cout << "ERROR: Type unknown";
+            return;
     }
 }
 
@@ -108,11 +112,15 @@ void displayI(char wordType, vector<int> partsOfTheWord)
     switch(wordType)
     {
         case 'i':
+        case 'q':
             print = " x" + to_string(partsOfTheWord[0]) + ", x" + to_string(partsOfTheWord[2]) + ", " + to_string(partsOfTheWord[3]);
             switch(partsOfTheWord[1])
             {
                 case 0:
-                    print = "addi" + print;
+                    if(wordType == 'i')
+                        print = "addi" + print;
+                    else
+                        print = "jalr" + print;
                     break;
                 case 4:
                     print = "xori" + print;
@@ -138,6 +146,9 @@ void displayI(char wordType, vector<int> partsOfTheWord)
                 case 3:
                     print = "sltui" + print;
                     break;
+                default:
+                    cout << "ERROR: Type unknown";
+                    return;
             }
             break;
         
@@ -160,6 +171,9 @@ void displayI(char wordType, vector<int> partsOfTheWord)
                 case 5:
                     print = "lhu" + print;
                     break;
+                default:
+                    cout << "ERROR: Type unknown";
+                    return;
             }
             break;
 
@@ -172,8 +186,14 @@ void displayI(char wordType, vector<int> partsOfTheWord)
                 case 1:
                     print = "ebreak";
                     break;
+                default:
+                    cout << "ERROR: Type unknown";
+                    return;
             }
             break;
+        default:
+            cout << "ERROR: Type unknown";
+            return;
     }
 
     cout << print << endl;
@@ -193,6 +213,9 @@ void displayS(vector<int> partsOfTheWord)
         case 2:
             print = "sw" + print;
             break;
+        default:
+            cout << "ERROR: Type unknown";
+            return;
     }
 
     cout << print << endl;
@@ -221,6 +244,9 @@ void displayB(vector<int> partsOfTheWord)
         case 7:
             print = "bgeu" + print;
             break;
+        default:
+            cout << "ERROR: Type unknown";
+            return;
     }
     cout << print << endl;
 }
@@ -236,6 +262,9 @@ void displayU(vector<int> partsOfTheWord)
         case 23:
             print = "auipc" + print;
             break;
+        default:
+            cout << "ERROR: Type unknown";
+            return;
     }
     cout << print << endl;
 }
