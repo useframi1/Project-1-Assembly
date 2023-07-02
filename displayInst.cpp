@@ -49,6 +49,7 @@ void displayInst(Instruction Inst)
                             "a0", "a1", "a2", "a3", "a4", "a5", "a6", "a7", "s2", "s3", 
                             "s4", "s5", "s6", "s7", "s8", "s9", "s10", "s11", "t3", "t4", 
                             "t5", "t6"};
+    string msg = "ERROR: Type unknown";
     switch(Inst.type){
         case 'r':
             displayR(Inst, ABIname);
@@ -69,14 +70,14 @@ void displayInst(Instruction Inst)
             displayJ(Inst, ABIname);
             break;
         default:
-            cout << "ERROR: Type unknown";
-            return;
+            throw msg;
     }
 }
 
 void displayR(Instruction Inst, string ABIname[])
 {   
-string print = " " + ABIname[Inst.rd] + ", " + ABIname[Inst.rs1] + ", " + ABIname[Inst.rs2];
+    string print = " " + ABIname[Inst.rd] + ", " + ABIname[Inst.rs1] + ", " + ABIname[Inst.rs2];
+    string msg = "ERROR: Type unknown";
     switch(Inst.func3)
     {
         case 0:
@@ -111,8 +112,7 @@ string print = " " + ABIname[Inst.rd] + ", " + ABIname[Inst.rs1] + ", " + ABInam
             print = "sltu" + print;
             break;
         default:
-            cout << "ERROR: Type unknown";
-            return;
+            throw msg;
     }
     cout << print << endl;
 }
@@ -120,6 +120,7 @@ string print = " " + ABIname[Inst.rd] + ", " + ABIname[Inst.rs1] + ", " + ABInam
 void displayI(Instruction Inst, string ABIname[])
 {
     string print;
+    string msg = "ERROR: Type unknown";
     if (Inst.opcode == "0010011" || Inst.opcode == "1100111")
     {
         print = " " + ABIname[Inst.rd] + ", " + ABIname[Inst.rs1] + ", " + to_string(Inst.immediate);
@@ -144,8 +145,8 @@ void displayI(Instruction Inst, string ABIname[])
                 print = "slli" + print;
                 break;
             case 5:
-                if(Inst.immediate > 32)
-                    print = "srai " + ABIname[Inst.rd] + ", " + ABIname[Inst.rs1] + ", " + to_string(Inst.immediate-1024);
+                if(Inst.func7 == 32)
+                    print = "srai " + print;
                 else
                     print = "srli" + print;
                 break;
@@ -156,13 +157,12 @@ void displayI(Instruction Inst, string ABIname[])
                 print = "sltui" + print;
                 break;
             default:
-                cout << "ERROR: Type unknown";
-                return;
+                throw msg;
         }
     }
     else if (Inst.opcode == "0000011")
     {
-        print = " " + ABIname[Inst.rd] + ", (" + to_string(Inst.immediate) + ")" + ABIname[Inst.rs1];
+        print = " " + ABIname[Inst.rd] + ", " + to_string(Inst.immediate) + "(" + ABIname[Inst.rs1] + ")";
         switch(Inst.func3)
         {
             case 0:
@@ -181,23 +181,21 @@ void displayI(Instruction Inst, string ABIname[])
                 print = "lhu" + print;
                 break;
             default:
-                cout << "ERROR: Type unknown";
+                throw msg;
                 return;
         }
     }
     else if (Inst.opcode == "1110011")
         print = "ecall";
     else
-    {
-        cout << "ERROR: Type unknown";
-        return;
-    }
+        throw msg;
     cout << print << endl;
 }
 
 void displayS(Instruction Inst, string ABIname[])
 { 
-    string print = " " + ABIname[Inst.rs2] + ", (" + to_string(Inst.immediate) + ")" + ABIname[Inst.rs1];
+    string print = " " + ABIname[Inst.rs2] + ", " + to_string(Inst.immediate) + "(" + ABIname[Inst.rs1] + ")";
+    string msg = "ERROR: Type unknown";
     switch(Inst.func3)
     {
         case 0:
@@ -210,8 +208,7 @@ void displayS(Instruction Inst, string ABIname[])
             print = "sw" + print;
             break;
         default:
-            cout << "ERROR: Type unknown";
-            return;
+            throw msg;
     }
 
     cout << print << endl;
@@ -220,6 +217,7 @@ void displayS(Instruction Inst, string ABIname[])
 void displayB(Instruction Inst, string ABIname[])
 {  
     string print = " " + ABIname[Inst.rs1] + ", " + ABIname[Inst.rs2] + ", " + to_string(Inst.immediate);
+    string msg = "ERROR: Type unknown";
     switch(Inst.func3)
     {
         case 0:
@@ -241,30 +239,26 @@ void displayB(Instruction Inst, string ABIname[])
             print = "bgeu" + print;
             break;
         default:
-            cout << "ERROR: Type unknown";
-            return;
+            throw msg;
     }
     cout << print << endl;
 }
 
 void displayU(Instruction Inst, string ABIname[])
-{    //opcode, rd, imm
+{    
     string print = " " + ABIname[Inst.rd] + ", " + to_string(Inst.immediate);
-
+    string msg = "ERROR: Type unknown";
     if(Inst.opcode == "0110111")
         print = "lui" + print;
     else if (Inst.opcode == "0010111")
         print = "auipc" + print;
     else
-    {
-        cout << "ERROR: Type unknown";
-        return;
-    }
+        throw msg;
     cout << print << endl;
 }
 
 void displayJ(Instruction Inst, string ABIname[])
-{   //rd, imm
+{ 
     string print = "jal " + ABIname[Inst.rd] + ", " + to_string(Inst.immediate);
     cout << print << endl;
 }
