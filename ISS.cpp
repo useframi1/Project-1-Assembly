@@ -13,15 +13,17 @@ struct Instruction
     bool isCompressed;
     string opcode;
     bool isTranslated;
+    string decompressedWord;
 };
 
 void initialize(string registers[], Instruction instructions[]);
 void instDivider(string machineCode, string memory[]);
 string decompressor(string halfword);
+string checkForDecompression(string memory[], Instruction &inst, int pc);
+char getType(string opcode);
 void translate(Instruction &inst, string word);
 void displayInst(Instruction inst);
 void execute(Instruction inst, string registers[], string memory[], int &pc);
-char getType(string opcode);
 
 void ISS(string machineCode)
 {
@@ -38,24 +40,11 @@ void ISS(string machineCode)
 
         while (pc < 64000)
         {
-            string halfword = memory[pc + 1] + memory[pc];
-            string word;
-            if (halfword.substr(14, 2) != "11")
-            {
-                word = decompressor(halfword);
-                instructions[pc].isCompressed = true;
-            }
-            else
-            {
-                word = memory[pc + 3] + memory[pc + 2] + memory[pc + 1] + memory[pc];
-                instructions[pc].isCompressed = false;
-            }
-
-            instructions[pc].opcode = word.substr(25, 7);
-            instructions[pc].type = getType(instructions[pc].opcode);
-
             if (!instructions[pc].isTranslated)
             {
+                string word = checkForDecompression(memory, instructions[pc], pc);
+                instructions[pc].opcode = word.substr(25, 7);
+                instructions[pc].type = getType(instructions[pc].opcode);
                 translate(instructions[pc], word);
                 displayInst(instructions[pc]);
             }
@@ -107,5 +96,24 @@ void initialize(string registers[], Instruction instructions[])
     for (int i = 0; i < 64000; i++)
     {
         instructions[i].isTranslated = false;
+        instructions[i].isCompressed = false;
     }
+}
+
+string checkForDecompression(string memory[], Instruction &inst, int pc)
+{
+    string halfword = memory[pc + 1] + memory[pc];
+    string word;
+    if (halfword.substr(14, 2) == "11" && !inst.isCompressed)
+    {
+        word = decompressor(halfword);
+        inst.decompressedWord = word;
+        inst.isCompressed = true;
+    }
+    else
+    {
+        word = inst.isCompressed ? inst.decompressedWord : memory[pc + 3] + memory[pc + 2] + memory[pc + 1] + memory[pc];
+    }
+
+    return word;
 }
