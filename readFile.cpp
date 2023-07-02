@@ -1,3 +1,6 @@
+#ifndef __READFILE_H__
+#define __READFILE_H__
+
 #include <iostream>
 #include <string>
 #include <vector>
@@ -11,11 +14,7 @@ using namespace std;
 
 // the decompressor function will check the opcode of every 16 bit instruction and if decompression is needed it will translate to 32 bits
 
-unsigned char memory[(16 + 64) * 1024];
-unsigned int pc;
-
-
-string readFile(char* argv[])
+string readFile(char *argv[])
 {
 	ifstream inFile(argv[1], ios::binary);
 	string machineCode;
@@ -34,7 +33,7 @@ string readFile(char* argv[])
 			}
 		}
 
-		//cout << "Machine Code: " << machineCode << endl;
+		// cout << "Machine Code: " << machineCode << endl;
 		inFile.close();
 	}
 	else
@@ -44,10 +43,4 @@ string readFile(char* argv[])
 	return machineCode;
 }
 
-int main(int argc, char* argv[])
-{
-	string machineCode = readFile(argv);
-	cout << "Machine Code: " << machineCode << endl;
-	return 0;
-}
-
+#endif // __READFILE_H__

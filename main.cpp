@@ -1,6 +1,8 @@
-#include <iostream>
-using namespace std;
+#include "ISS.cpp"
+#include "readFile.cpp"
 
-int main()
+int main(char *args[])
 {
+    string machineCode = readFile(args);
+    ISS(machineCode);
 }

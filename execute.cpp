@@ -1,85 +1,11 @@
+#ifndef __EXECUTE_H__
+#define __EXECUTE_H__
+
 #include <iostream>
 #include <cmath>
+#include "instructionStruct.h"
+#include "utilities.cpp"
 using namespace std;
-
-struct Instruction
-{
-    int func7;
-    int rd;
-    int rs1;
-    int rs2;
-    int func3;
-    int immediate;
-    char type;
-    bool isCompressed;
-    string opcode;
-};
-
-string getTwosComplement(string binary)
-{
-    bool foundOne = false;
-    string temp = binary;
-    for (int i = binary.length() - 1; i >= 0; i--)
-    {
-        if (foundOne)
-        {
-            if (binary[i] == '0')
-                temp[i] = '1';
-            else
-                temp[i] = '0';
-        }
-        if (binary[i] == '1' && !foundOne)
-        {
-            foundOne = true;
-        }
-    }
-
-    return temp;
-}
-
-long int binaryToDec(string binary, bool IsUnsigned)
-{
-    bool isNeg = false;
-    long int decimal = 0;
-    string binaryTemp = binary;
-    if (!IsUnsigned && binary[0] == '1')
-    {
-        binaryTemp = getTwosComplement(binary);
-        isNeg = true;
-    }
-
-    for (int i = binaryTemp.length() - 1; i >= 0; i--)
-    {
-        decimal = decimal + (binaryTemp[i] - 48) * pow(2, binaryTemp.length() - i - 1);
-    }
-
-    return (isNeg) ? -decimal : decimal;
-}
-
-string decToBinary(int num)
-{
-    string binary = "";
-    bool isNeg = false;
-    if (num < 0)
-    {
-        isNeg = true;
-        num *= -1;
-    }
-
-    for (int i = 31; i >= 0; i--)
-    {
-        int k = num >> i;
-        if (k & 1)
-            binary += '1';
-        else
-            binary += '0';
-    }
-
-    if (isNeg)
-        binary = getTwosComplement(binary);
-
-    return binary;
-}
 
 string SRL(string rs1, int rs2)
 {
@@ -449,53 +375,54 @@ void execute(Instruction inst, string registers[], string memory[], int &pc)
     }
 }
 
-int main()
-{
-    Instruction inst;
-    inst.opcode = "0010111";
-    inst.type = 'j';
-    inst.rd = 5;
-    inst.func3 = 4;
-    inst.rs1 = 2;
-    inst.rs2 = 10;
-    inst.immediate = 5;
-    inst.func7 = 0;
+// int main()
+// {
+//     Instruction inst;
+//     inst.opcode = "0010111";
+//     inst.type = 'j';
+//     inst.rd = 5;
+//     inst.func3 = 4;
+//     inst.rs1 = 2;
+//     inst.rs2 = 10;
+//     inst.immediate = 5;
+//     inst.func7 = 0;
 
-    string registers[32];
-    string memory[80000];
-    int pc = 5;
-    for (int i = 0; i < 32; i++)
-    {
-        registers[i] = "";
-        registers[i].append(32, '0');
-    }
+//     string registers[32];
+//     string memory[80000];
+//     int pc = 5;
+//     for (int i = 0; i < 32; i++)
+//     {
+//         registers[i] = "";
+//         registers[i].append(32, '0');
+//     }
 
-    memory[0] = "01000001";
-    memory[1] = "01000010";
-    memory[2] = "01000011";
-    memory[3] = "01000100";
+//     memory[0] = "01000001";
+//     memory[1] = "01000010";
+//     memory[2] = "01000011";
+//     memory[3] = "01000100";
 
-    registers[inst.rs2] = "";
-    registers[inst.rs2].append(31, '1');
-    registers[inst.rs2] += "0";
+//     registers[inst.rs2] = "";
+//     registers[inst.rs2].append(31, '1');
+//     registers[inst.rs2] += "0";
 
-    // registers[inst.rs1].erase(29, 3);
-    // registers[inst.rs1] += "111";
+//     // registers[inst.rs1].erase(29, 3);
+//     // registers[inst.rs1] += "111";
 
-    registers[inst.rs1].erase(29, 3);
-    registers[inst.rs1] += "101";
+//     registers[inst.rs1].erase(29, 3);
+//     registers[inst.rs1] += "101";
 
-    execute(inst, registers, memory, pc);
+//     execute(inst, registers, memory, pc);
 
-    for (int i = 0; i < 32; i++)
-    {
-        cout << i << ":\t" << registers[i] << endl;
-    }
+//     for (int i = 0; i < 32; i++)
+//     {
+//         cout << i << ":\t" << registers[i] << endl;
+//     }
 
-    for (int i = 0; i < 4; i++)
-    {
-        cout << memory[i] << endl;
-    }
+//     for (int i = 0; i < 4; i++)
+//     {
+//         cout << memory[i] << endl;
+//     }
 
-    cout << pc << endl;
-}
+//     cout << pc << endl;
+// }
+#endif // __EXECUTE_H__

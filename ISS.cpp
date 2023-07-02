@@ -1,29 +1,13 @@
-#include <iostream>
-using namespace std;
-
-struct Instruction
-{
-    int func7;
-    int rd;
-    int rs1;
-    int rs2;
-    int func3;
-    int immediate;
-    char type;
-    bool isCompressed;
-    string opcode;
-    bool isTranslated;
-    string decompressedWord;
-};
+#include "loadMemory.cpp"
+#include "decompressor.cpp"
+#include "translate.cpp"
+#include "displayInst.cpp"
+#include "execute.cpp"
+#include "instructionStruct.h"
 
 void initialize(string registers[], Instruction instructions[]);
-void loadMemory(string machineCode, string memory[]);
-string decompressor(string halfword);
 string checkForDecompression(string memory[], Instruction &inst, int pc);
 char getType(string opcode);
-void translate(Instruction &inst, string word);
-void displayInst(Instruction inst);
-void execute(Instruction inst, string registers[], string memory[], int &pc);
 
 void ISS(string machineCode)
 {

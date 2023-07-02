@@ -1,3 +1,6 @@
+#ifndef __LOADMEMORY_H__
+#define __LOADMEMORY_H__
+
 #include <iostream>
 using namespace std;
 
@@ -5,7 +8,7 @@ using namespace std;
 /// @param machineCode the whole binary code fetched from the file
 /// @param memory the memory array of size 80 000
 /// @param error the error message
-void instDivider(string machineCode, string memory[])
+void loadMemory(string machineCode, string memory[])
 {
     // checks if the number of bytes is greater than the text section capacity (64kbytes)
     if (machineCode.length() / 8 >= 80000)
@@ -51,3 +54,4 @@ void instDivider(string machineCode, string memory[])
 //         cerr << e << endl;
 //     }
 // }
+#endif // __LOADMEMORY_H__
