@@ -37,10 +37,10 @@ string getTwosComplement(string binary)
     return temp;
 }
 
-int binaryToDec(string binary, bool IsUnsigned)
+long int binaryToDec(string binary, bool IsUnsigned)
 {
     bool isNeg = false;
-    int decimal = 0;
+    long int decimal = 0;
     string binaryTemp = binary;
     if (!IsUnsigned && binary[0] == '1')
     {
@@ -102,48 +102,50 @@ void executeRType(Instruction inst, string registers[], string memory[])
         return;
     }
 
+    long int rs1 = 0, rs2 = 0, sum = 0, sll = 0, XOR = 0, sra = 0, OR = 0, AND = 0;
     switch (inst.func3)
     {
     case 0:
-        int rs1 = binaryToDec(registers[inst.rs1], false);
-        int rs2 = binaryToDec(registers[inst.rs2], false);
+        rs1 = binaryToDec(registers[inst.rs1], false);
+        rs2 = binaryToDec(registers[inst.rs2], false);
         if (inst.func7 == 32)
             rs2 *= -1;
-        int sum = rs1 + rs2;
+        sum = rs1 + rs2;
         registers[inst.rd] = decToBinary(sum);
         break;
     case 1:
-        int rs1 = binaryToDec(registers[inst.rs1], false);
-        int rs2 = binaryToDec(registers[inst.rs2], false);
-        int sll = rs1 * pow(2, rs2);
+        rs1 = binaryToDec(registers[inst.rs1], false);
+        rs2 = binaryToDec(registers[inst.rs2], false);
+        sll = rs1 * pow(2, rs2);
         registers[inst.rd] = decToBinary(sll);
         break;
     case 2:
-        int rs1 = binaryToDec(registers[inst.rs1], false);
-        int rs2 = binaryToDec(registers[inst.rs2], false);
+        rs1 = binaryToDec(registers[inst.rs1], false);
+        rs2 = binaryToDec(registers[inst.rs2], false);
         registers[inst.rd] = "";
         registers[inst.rd].append(31, '0');
         registers[inst.rd] += (rs1 < rs2) ? "1" : "0";
         break;
     case 3:
-        int rs1 = binaryToDec(registers[inst.rs1], true);
-        int rs2 = binaryToDec(registers[inst.rs2], true);
+        rs1 = binaryToDec(registers[inst.rs1], true);
+        rs2 = binaryToDec(registers[inst.rs2], true);
         registers[inst.rd] = "";
         registers[inst.rd].append(31, '0');
         registers[inst.rd] += (rs1 < rs2) ? "1" : "0";
         break;
     case 4:
-        int rs1 = binaryToDec(registers[inst.rs1], true);
-        int rs2 = binaryToDec(registers[inst.rs2], true);
-        int XOR = rs1 ^ rs2;
+        rs1 = binaryToDec(registers[inst.rs1], true);
+        rs2 = binaryToDec(registers[inst.rs2], true);
+        cout << rs1 << " " << rs2 << endl;
+        XOR = rs1 xor rs2;
         registers[inst.rd] = decToBinary(XOR);
         break;
     case 5:
-        int rs2 = binaryToDec(registers[inst.rs2], false);
+        rs2 = binaryToDec(registers[inst.rs2], false);
         if (inst.func7 == 32)
         {
-            int rs1 = binaryToDec(registers[inst.rs1], false);
-            int sra = rs1 / pow(2, rs2);
+            rs1 = binaryToDec(registers[inst.rs1], false);
+            sra = rs1 / pow(2, rs2);
             registers[inst.rd] = decToBinary(sra);
         }
         else
@@ -152,15 +154,15 @@ void executeRType(Instruction inst, string registers[], string memory[])
         }
         break;
     case 6:
-        int rs1 = binaryToDec(registers[inst.rs1], true);
-        int rs2 = binaryToDec(registers[inst.rs2], true);
-        int OR = rs1 | rs2;
+        rs1 = binaryToDec(registers[inst.rs1], true);
+        rs2 = binaryToDec(registers[inst.rs2], true);
+        OR = rs1 | rs2;
         registers[inst.rd] = decToBinary(OR);
         break;
     case 7:
-        int rs1 = binaryToDec(registers[inst.rs1], true);
-        int rs2 = binaryToDec(registers[inst.rs2], true);
-        int AND = rs1 & rs2;
+        rs1 = binaryToDec(registers[inst.rs1], true);
+        rs2 = binaryToDec(registers[inst.rs2], true);
+        AND = rs1 & rs2;
         registers[inst.rd] = decToBinary(AND);
         break;
     default:
@@ -172,35 +174,36 @@ void executeIType(Instruction inst, string registers[], string memory[], int &pc
 {
     if (inst.rd != 0)
     {
+        long int rs1 = 0, rs2 = 0, addi = 0, slli = 0, XORI = 0, srai = 0, ORI = 0, ANDI = 0;
         if (inst.opcode == "0010011")
         {
             switch (inst.func3)
             {
             case 0:
-                int rs1 = binaryToDec(registers[inst.rs1], false);
-                int addi = rs1 + inst.immediate;
+                rs1 = binaryToDec(registers[inst.rs1], false);
+                addi = rs1 + inst.immediate;
                 registers[inst.rd] = decToBinary(addi);
                 break;
             case 1:
-                int rs1 = binaryToDec(registers[inst.rs1], false);
-                int slli = rs1 * pow(2, inst.immediate);
+                rs1 = binaryToDec(registers[inst.rs1], false);
+                slli = rs1 * pow(2, inst.immediate);
                 registers[inst.rd] = decToBinary(slli);
                 break;
             case 2:
-                int rs1 = binaryToDec(registers[inst.rs1], false);
+                rs1 = binaryToDec(registers[inst.rs1], false);
                 registers[inst.rd] = "";
                 registers[inst.rd].append(31, '0');
                 registers[inst.rd] += (rs1 < inst.immediate) ? "1" : "0";
                 break;
             case 3:
-                int rs1 = binaryToDec(registers[inst.rs1], true);
+                rs1 = binaryToDec(registers[inst.rs1], true);
                 registers[inst.rd] = "";
                 registers[inst.rd].append(31, '0');
                 registers[inst.rd] += (rs1 < inst.immediate) ? "1" : "0";
                 break;
             case 4:
-                int rs1 = binaryToDec(registers[inst.rs1], true);
-                int XORI = rs1 ^ inst.immediate;
+                rs1 = binaryToDec(registers[inst.rs1], true);
+                XORI = rs1 ^ inst.immediate;
                 registers[inst.rd] = decToBinary(XORI);
                 break;
             case 5:
@@ -208,19 +211,19 @@ void executeIType(Instruction inst, string registers[], string memory[], int &pc
                     registers[inst.rd] = SRL(registers[inst.rs1], inst.immediate);
                 else
                 {
-                    int rs1 = binaryToDec(registers[inst.rs1], false);
-                    int srai = rs1 / pow(2, inst.immediate);
+                    rs1 = binaryToDec(registers[inst.rs1], false);
+                    srai = rs1 / pow(2, inst.immediate);
                     registers[inst.rd] = decToBinary(srai);
                 }
                 break;
             case 6:
-                int rs1 = binaryToDec(registers[inst.rs1], true);
-                int ORI = rs1 | inst.immediate;
+                rs1 = binaryToDec(registers[inst.rs1], true);
+                ORI = rs1 | inst.immediate;
                 registers[inst.rd] = decToBinary(ORI);
                 break;
             case 7:
-                int rs1 = binaryToDec(registers[inst.rs1], true);
-                int ANDI = rs1 & inst.immediate;
+                rs1 = binaryToDec(registers[inst.rs1], true);
+                ANDI = rs1 & inst.immediate;
                 registers[inst.rd] = decToBinary(ANDI);
                 break;
             default:
@@ -230,13 +233,13 @@ void executeIType(Instruction inst, string registers[], string memory[], int &pc
         else if (inst.opcode == "0000011")
         {
             registers[inst.rd] = "";
-            int rs1 = binaryToDec(registers[inst.rs1], true);
+            rs1 = binaryToDec(registers[inst.rs1], true);
 
             switch (inst.func3)
             {
             case 0:
                 registers[inst.rd].append(24, memory[rs1 + inst.immediate][0]);
-                registers[inst.rd] += memory[inst.rs1 + inst.immediate];
+                registers[inst.rd] += memory[rs1 + inst.immediate];
                 break;
             case 1:
                 registers[inst.rd].append(16, memory[rs1 + inst.immediate + 1][0]);
@@ -258,24 +261,31 @@ void executeIType(Instruction inst, string registers[], string memory[], int &pc
                 break;
             }
         }
-        else if (inst.opcode == "1100111")
+    }
+
+    if (inst.opcode == "1100111")
+    {
+        if (inst.rd != 0)
         {
-            registers[inst.rd] = pc + ((inst.isCompressed) ? 2 : 4);
-            pc = binaryToDec(registers[inst.rs1], true) + inst.immediate;
+            registers[inst.rd] = decToBinary(pc + ((inst.isCompressed) ? 2 : 4));
         }
+        pc = binaryToDec(registers[inst.rs1], true) + inst.immediate;
     }
 
     if (inst.opcode == "1110011")
     {
+        int baseAddress = 0, value = 0;
         string message = "";
         switch (binaryToDec(registers[17], true))
         {
         case 1:
-            cout << binaryToDec(memory[binaryToDec(registers[10], true)], false);
+            value = binaryToDec(registers[10], true);
+            message = memory[value + 3] + memory[value + 2] + memory[value + 1] + memory[value];
+            cout << binaryToDec(message, false) << endl;
             break;
         case 4:
-            int baseAddress = binaryToDec(registers[10], true);
-            int value = binaryToDec(memory[baseAddress], false);
+            baseAddress = binaryToDec(registers[10], true);
+            value = binaryToDec(memory[baseAddress], false);
             while (value != 0)
             {
                 message += value;
@@ -297,7 +307,7 @@ void executeSType(Instruction inst, string registers[], string memory[])
 {
     string toStore = "";
     string rs2 = registers[inst.rs2];
-    int rs1 = binaryToDec(registers[inst.rs1], true);
+    long int rs1 = binaryToDec(registers[inst.rs1], true);
     switch (inst.func3)
     {
     case 0:
@@ -328,36 +338,48 @@ void executeSType(Instruction inst, string registers[], string memory[])
 
 void executeBType(Instruction inst, string registers[], string memory[], int &pc)
 {
-    int rs1 = binaryToDec(registers[inst.rs1], false);
-    int rs2 = binaryToDec(registers[inst.rs2], false);
-    int rs1U = binaryToDec(registers[inst.rs1], true);
-    int rs2U = binaryToDec(registers[inst.rs2], true);
+    long int rs1 = binaryToDec(registers[inst.rs1], false);
+    long int rs2 = binaryToDec(registers[inst.rs2], false);
+    long int rs1U = binaryToDec(registers[inst.rs1], true);
+    long int rs2U = binaryToDec(registers[inst.rs2], true);
 
     switch (inst.func3)
     {
     case 0:
         if (rs1 == rs2)
             pc += inst.immediate;
+        else
+            pc += inst.isCompressed ? 2 : 4;
         break;
     case 1:
         if (rs1 != rs2)
             pc += inst.immediate;
+        else
+            pc += inst.isCompressed ? 2 : 4;
         break;
     case 4:
         if (rs1 < rs2)
             pc += inst.immediate;
+        else
+            pc += inst.isCompressed ? 2 : 4;
         break;
     case 5:
         if (rs1 >= rs2)
             pc += inst.immediate;
+        else
+            pc += inst.isCompressed ? 2 : 4;
         break;
     case 6:
         if (rs1U < rs2U)
             pc += inst.immediate;
+        else
+            pc += inst.isCompressed ? 2 : 4;
         break;
     case 7:
         if (rs1U >= rs2U)
             pc += inst.immediate;
+        else
+            pc += inst.isCompressed ? 2 : 4;
         break;
 
     default:
@@ -382,7 +404,7 @@ void executeUType(Instruction inst, string registers[], string memory[], int pc)
     }
     else if (inst.opcode == "0010111")
     {
-        registers[inst.rd] = pc + binaryToDec(imm, true);
+        registers[inst.rd] = decToBinary(pc + binaryToDec(imm, true));
     }
 }
 
@@ -390,7 +412,7 @@ void executeJType(Instruction inst, string registers[], string memory[], int &pc
 {
     if (inst.rd != 0)
     {
-        registers[inst.rd] = pc + ((inst.isCompressed) ? 2 : 4);
+        registers[inst.rd] = decToBinary(pc + ((inst.isCompressed) ? 2 : 4));
     }
     pc += inst.immediate;
 }
@@ -425,4 +447,55 @@ void execute(Instruction inst, string registers[], string memory[], int &pc)
     {
         pc += inst.isCompressed ? 2 : 4;
     }
+}
+
+int main()
+{
+    Instruction inst;
+    inst.opcode = "0010111";
+    inst.type = 'j';
+    inst.rd = 5;
+    inst.func3 = 4;
+    inst.rs1 = 2;
+    inst.rs2 = 10;
+    inst.immediate = 5;
+    inst.func7 = 0;
+
+    string registers[32];
+    string memory[80000];
+    int pc = 5;
+    for (int i = 0; i < 32; i++)
+    {
+        registers[i] = "";
+        registers[i].append(32, '0');
+    }
+
+    memory[0] = "01000001";
+    memory[1] = "01000010";
+    memory[2] = "01000011";
+    memory[3] = "01000100";
+
+    registers[inst.rs2] = "";
+    registers[inst.rs2].append(31, '1');
+    registers[inst.rs2] += "0";
+
+    // registers[inst.rs1].erase(29, 3);
+    // registers[inst.rs1] += "111";
+
+    registers[inst.rs1].erase(29, 3);
+    registers[inst.rs1] += "101";
+
+    execute(inst, registers, memory, pc);
+
+    for (int i = 0; i < 32; i++)
+    {
+        cout << i << ":\t" << registers[i] << endl;
+    }
+
+    for (int i = 0; i < 4; i++)
+    {
+        cout << memory[i] << endl;
+    }
+
+    cout << pc << endl;
 }
