@@ -5,12 +5,12 @@ using namespace std;
 /// @param machineCode the whole binary code fetched from the file
 /// @param memory the memory array of size 80 000
 /// @param error the error message
-void instDivider(string machineCode, string memory[], string &error)
+void instDivider(string machineCode, string memory[])
 {
     // checks if the number of bytes is greater than the text section capacity (64kbytes)
-    if (machineCode.length() / 8 >= 64000)
+    if (machineCode.length() / 8 >= 80000)
     {
-        error = "Memory Overflow detected!";
+        string error = "Memory Overflow detected!";
         throw error;
     }
     else
