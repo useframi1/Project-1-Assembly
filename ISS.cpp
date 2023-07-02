@@ -17,7 +17,7 @@ struct Instruction
 };
 
 void initialize(string registers[], Instruction instructions[]);
-void instDivider(string machineCode, string memory[]);
+void loadMemory(string machineCode, string memory[]);
 string decompressor(string halfword);
 string checkForDecompression(string memory[], Instruction &inst, int pc);
 char getType(string opcode);
@@ -36,18 +36,18 @@ void ISS(string machineCode)
 
     try
     {
-        instDivider(machineCode, memory);
+        loadMemory(machineCode, memory);
+        for (int i = 0; i < 64000; i++)
+        {
+            string word = checkForDecompression(memory, instructions[i], pc);
+            instructions[i].opcode = word.substr(25, 7);
+            instructions[i].type = getType(instructions[i].opcode);
+            translate(instructions[i], word);
+            displayInst(instructions[i]);
+        }
 
         while (pc < 64000)
         {
-            if (!instructions[pc].isTranslated)
-            {
-                string word = checkForDecompression(memory, instructions[pc], pc);
-                instructions[pc].opcode = word.substr(25, 7);
-                instructions[pc].type = getType(instructions[pc].opcode);
-                translate(instructions[pc], word);
-                displayInst(instructions[pc]);
-            }
             execute(instructions[pc], registers, memory, pc);
         }
     }
