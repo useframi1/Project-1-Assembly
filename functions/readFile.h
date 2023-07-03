@@ -95,7 +95,6 @@ string readFile(char *argv[], int numberOfFiles)
 	if (numberOfFiles > 1)
 		readDataSection(machineCode, argv[2]);
 
-	cout << machineCode.length() / 8 << endl;
 	return machineCode;
 }
 
