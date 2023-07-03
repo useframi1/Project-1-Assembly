@@ -1,8 +1,15 @@
-#include "ISS.cpp"
-#include "readFile.cpp"
+#include "functions/ISS.h"
+#include "functions/readFile.h"
 
-int main(char *args[])
+int main(int argc, char *argv[])
 {
-    string machineCode = readFile(args);
-    ISS(machineCode);
+    try
+    {
+        string machineCode = readFile(argv, argc - 1);
+        ISS(machineCode);
+    }
+    catch (string e)
+    {
+        cerr << e << endl;
+    }
 }

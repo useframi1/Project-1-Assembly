@@ -6,7 +6,7 @@
 #include <cmath>
 #include <vector>
 #include "instructionStruct.h"
-#include "utilities.cpp"
+#include "utilities.h"
 using namespace std;
 
 void translateR(string stringInst, Instruction &inst)

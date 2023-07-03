@@ -4,7 +4,7 @@
 #include <iostream>
 #include <cmath>
 #include "instructionStruct.h"
-#include "utilities.cpp"
+#include "utilities.h"
 using namespace std;
 
 string SRL(string rs1, int rs2)
@@ -205,9 +205,8 @@ void executeIType(Instruction inst, string registers[], string memory[], int &pc
         switch (binaryToDec(registers[17], true))
         {
         case 1:
-            value = binaryToDec(registers[10], true);
-            message = memory[value + 3] + memory[value + 2] + memory[value + 1] + memory[value];
-            cout << binaryToDec(message, false) << endl;
+            value = binaryToDec(registers[10], false);
+            cout << value << endl;
             break;
         case 4:
             baseAddress = binaryToDec(registers[10], true);

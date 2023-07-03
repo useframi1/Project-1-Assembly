@@ -11,7 +11,7 @@ using namespace std;
 void loadMemory(string machineCode, string memory[])
 {
     // checks if the number of bytes is greater than the text section capacity (64kbytes)
-    if (machineCode.length() / 8 >= 80000)
+    if (machineCode.length() / 8 >= 81921)
     {
         string error = "Memory Overflow detected!";
         throw error;
@@ -19,20 +19,24 @@ void loadMemory(string machineCode, string memory[])
     else
     {
         // initialize memory
-        for (int i = 0; i < 80000; i++)
+        for (int i = 0; i < 81920; i++)
         {
             memory[i] = "";
+            memory[i].append(8, '0');
         }
 
         // store every 8 bits in a memory index
         int j = 0;
+        int k = 0;
         for (int i = 0; i < machineCode.length(); i++)
         {
-            if (memory[j].length() == 8)
+            if (k == 8)
             {
                 j++;
+                k = 0;
             }
-            memory[j] += machineCode[i];
+            memory[j][k] = machineCode[i];
+            k++;
         }
     }
 }
