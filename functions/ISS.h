@@ -26,22 +26,14 @@ void ISS(string machineCode)
     try
     {
         loadMemory(machineCode, memory);
-        // for (int i = 65528; i < 66000; i++)
-        // {
-        //     cout << memory[i] << endl;
-        // }
 
-        runDisplayAll(memory, instructions, registers);
-        // runDisplayAtExecution(memory, instructions, registers);
+        runDisplayAtExecution(memory, instructions, registers);
+        // runDisplayAll(memory, instructions, registers);
     }
     catch (string e)
     {
         cerr << e << endl;
     }
-    // for (int i = 0; i < 32; i++)
-    // {
-    //     cout << i << ": " << registers[i] << endl;
-    // }
 }
 
 char getType(string opcode)
@@ -93,6 +85,7 @@ string checkForDecompression(string memory[], Instruction &inst, int pc)
 {
     string halfword = memory[pc + 1] + memory[pc];
     string word = "";
+    // cout << halfword << endl;
 
     if (halfword.substr(14, 2) != "11" && !inst.isCompressed)
     {
@@ -108,57 +101,62 @@ string checkForDecompression(string memory[], Instruction &inst, int pc)
     return word;
 }
 
-void runDisplayAll(string memory[], Instruction instructions[], string registers[])
-{
-    cout << "Assembly code" << endl;
-    int i = 0;
-    int pc = 0;
-    while (i < 65536)
-    {
-        if ((memory[i + 1] + memory[i]) != "0000000000000000")
-        {
-            string word = checkForDecompression(memory, instructions[i], i);
-            instructions[i].opcode = word.substr(25, 7);
-            instructions[i].type = getType(instructions[i].opcode);
-            translate(instructions[i], word);
-            cout << i << ":\t";
-            displayInst(instructions[i]);
-        }
-        i += instructions[i].isCompressed ? 2 : 4;
-    }
-
-    cout << "Execution" << endl;
-    while (pc < 65536)
-    {
-        if ((memory[pc + 1] + memory[pc]) == "0000000000000000")
-        {
-            string error = "Program exited with no termination";
-            throw error;
-        }
-        execute(instructions[pc], registers, memory, pc);
-    }
-}
-
 void runDisplayAtExecution(string memory[], Instruction instructions[], string registers[])
 {
     int pc = 0;
-    while (pc < 65536)
+    int i = 0;
+    while (pc < 65535 && i < 10)
     {
         if ((memory[pc + 1] + memory[pc]) == "0000000000000000")
         {
-            string error = "Program exited with no termination";
-            throw error;
+            pc++;
+            continue;
         }
         if (!instructions[pc].isTranslated)
         {
             string word = checkForDecompression(memory, instructions[pc], pc);
+            // cout << word << endl;
             instructions[pc].opcode = word.substr(25, 7);
             instructions[pc].type = getType(instructions[pc].opcode);
             translate(instructions[pc], word);
-            cout << pc << ":\t";
+            cout << i << ":\t" << pc << ":\t";
             displayInst(instructions[pc]);
         }
+        for (int i = 65536; i < 65568; i++)
+        {
+            cout << memory[i] << endl;
+        }
         execute(instructions[pc], registers, memory, pc);
+
+        i++;
+    }
+}
+
+void runDisplayAll(string memory[], Instruction instructions[], string registers[])
+{
+    int pc = 0;
+    int i = 0;
+    while (pc < 65535)
+    {
+        if ((memory[pc + 1] + memory[pc]) == "0000000000000000")
+        {
+            pc++;
+            continue;
+        }
+        string word = checkForDecompression(memory, instructions[pc], pc);
+        // cout << word << endl;
+        instructions[pc].opcode = word.substr(25, 7);
+        instructions[pc].type = getType(instructions[pc].opcode);
+        translate(instructions[pc], word);
+        cout << pc << ":\t";
+        displayInst(instructions[pc]);
+        pc += instructions[pc].isCompressed ? 2 : 4;
+    }
+    pc = 0;
+    while (pc < 65535 && i < 300)
+    {
+        execute(instructions[pc], registers, memory, pc);
+        i++;
     }
 }
 

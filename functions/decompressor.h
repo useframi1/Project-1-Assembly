@@ -78,18 +78,18 @@ string decompressor(string compInst)
 		{
 			// c.jal instruction, decompresses to jal x1,imm
 			if (compInst.substr(3, 1) == "0")
-				decompInst = "0" + compInst.substr(7, 1) + compInst.substr(5, 2) + compInst.substr(9, 1) + compInst.substr(8, 1) + compInst.substr(12, 1) + compInst.substr(4, 1) + compInst.substr(10, 3) + compInst.substr(3, 1) + "00000000" + "00001" + "1101111";
+				decompInst = "0" + compInst.substr(7, 1) + compInst.substr(5, 2) + compInst.substr(9, 1) + compInst.substr(8, 1) + compInst.substr(13, 1) + compInst.substr(4, 1) + compInst.substr(10, 3) + compInst.substr(3, 1) + "00000000" + "00001" + "1101111";
 			else if (compInst.substr(3, 1) == "1")
-				decompInst = "1" + compInst.substr(7, 1) + compInst.substr(5, 2) + compInst.substr(9, 1) + compInst.substr(8, 1) + compInst.substr(12, 1) + compInst.substr(4, 1) + compInst.substr(10, 3) + compInst.substr(3, 1) + "00000000" + "00001" + "1101111";
+				decompInst = "1" + compInst.substr(7, 1) + compInst.substr(5, 2) + compInst.substr(9, 1) + compInst.substr(8, 1) + compInst.substr(13, 1) + compInst.substr(4, 1) + compInst.substr(10, 3) + compInst.substr(3, 1) + "11111111" + "00001" + "1101111";
 		}
 		if (compInst.substr(0, 3) == "101")
 		{
 			// c.j instruction, decompresses to jal x0,imm
 
 			if (compInst.substr(3, 1) == "0")
-				decompInst = "0" + compInst.substr(7, 1) + compInst.substr(5, 2) + compInst.substr(9, 1) + compInst.substr(8, 1) + compInst.substr(12, 1) + compInst.substr(4, 1) + compInst.substr(10, 3) + compInst.substr(3, 1) + "00000000" + "00000" + "1101111";
+				decompInst = "0" + compInst.substr(7, 1) + compInst.substr(5, 2) + compInst.substr(9, 1) + compInst.substr(8, 1) + compInst.substr(13, 1) + compInst.substr(4, 1) + compInst.substr(10, 3) + compInst.substr(3, 1) + "00000000" + "00000" + "1101111";
 			else if (compInst.substr(3, 1) == "1")
-				decompInst = "1" + compInst.substr(7, 1) + compInst.substr(5, 2) + compInst.substr(9, 1) + compInst.substr(8, 1) + compInst.substr(12, 1) + compInst.substr(4, 1) + compInst.substr(10, 3) + compInst.substr(3, 1) + "00000000" + "00000" + "1101111";
+				decompInst = "1" + compInst.substr(7, 1) + compInst.substr(5, 2) + compInst.substr(9, 1) + compInst.substr(8, 1) + compInst.substr(13, 1) + compInst.substr(4, 1) + compInst.substr(10, 3) + compInst.substr(3, 1) + "11111111" + "00000" + "1101111";
 		}
 		// c.beqz ->110; c.bnez ->111
 		if (compInst.substr(0, 3) == "110")
@@ -216,7 +216,7 @@ string decompressor(string compInst)
 		if (compInst.substr(0, 3) == "010" && compInst.substr(4, 5) != "00000")
 		{
 			// c.lwsp instruction, decompresses to lw rd,imm(rs2)
-			decompInst = "0000" + compInst.substr(12, 2) + compInst.substr(3, 1) + compInst.substr(9, 3) + "00" + compInst.substr(4, 5) + "010" + compInst.substr(4, 5) + "0000011";
+			decompInst = "0000" + compInst.substr(12, 2) + compInst.substr(3, 1) + compInst.substr(9, 3) + "00" + "00010" + "010" + compInst.substr(4, 5) + "0000011";
 		}
 		if (compInst.substr(0, 3) == "110")
 		{

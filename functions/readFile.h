@@ -38,6 +38,7 @@ void readTextSection(string &machineCode, char *arg)
 		string error = "Error opening input file.";
 		throw error;
 	}
+
 	if (machineCode.length() / 8 > 65536)
 	{
 		machineCode = machineCode.substr(0, 65536 * 8);
@@ -74,7 +75,6 @@ void readDataSection(string &machineCode, char *arg)
 		string error = "Error opening input file.";
 		throw error;
 	}
-	cout << dataCode.length() / 8 << endl;
 	if (dataCode.length() / 8 > 16384)
 	{
 		dataCode = dataCode.substr(0, 16384 * 8);
@@ -84,6 +84,7 @@ void readDataSection(string &machineCode, char *arg)
 		int difference = 16384 - dataCode.length() / 8;
 		dataCode.append(difference * 8, '0');
 	}
+	cout << dataCode.length() / 8 << endl;
 	machineCode += dataCode;
 }
 
