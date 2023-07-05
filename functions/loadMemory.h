@@ -41,21 +41,4 @@ void loadMemory(string machineCode, string memory[])
     }
 }
 
-// int main()
-// {
-//     string memory[80000];
-//     string error = "";
-//     try
-//     {
-//         instDivider("01010101010101010101010101010101", memory, error);
-//         for (int i = 0; i < 10; i++)
-//         {
-//             cout << memory[i] << endl;
-//         }
-//     }
-//     catch (string e)
-//     {
-//         cerr << e << endl;
-//     }
-// }
 #endif // __LOADMEMORY_H__
