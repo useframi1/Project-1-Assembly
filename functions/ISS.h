@@ -119,10 +119,7 @@ void runDisplayAtExecution(string memory[], Instruction instructions[], string r
             cout << pc << ":\t";
             displayInst(instructions[pc]);
         }
-        for (int i = 65536; i < 65568; i++)
-        {
-            cout << memory[i] << endl;
-        }
+
         execute(instructions[pc], registers, memory, pc);
     }
 }
