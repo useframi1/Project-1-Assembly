@@ -8,6 +8,12 @@
 #include <bitset>
 using namespace std;
 
+// this project is to create a simulator of a disassembler
+// the disassembler will take in a binary file that contains machine code and output the assembly code
+// however this file should be read from the command line
+
+// the decompressor function will check the opcode of every 16 bit instruction and if decompression is needed it will translate to 32 bits
+
 void readTextSection(string &machineCode, char *arg)
 {
 	ifstream file(arg, ios::binary);
@@ -78,6 +84,7 @@ void readDataSection(string &machineCode, char *arg)
 		int difference = 16384 - dataCode.length() / 8;
 		dataCode.append(difference * 8, '0');
 	}
+	cout << dataCode.length() / 8 << endl;
 	machineCode += dataCode;
 }
 

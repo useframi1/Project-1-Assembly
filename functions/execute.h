@@ -158,35 +158,34 @@ void executeIType(Instruction inst, string registers[], string memory[], int &pc
         }
         else if (inst.opcode == "0000011")
         {
+            registers[inst.rd] = "";
             rs1 = binaryToDec(registers[inst.rs1], true);
-            string loadBits = "";
 
             switch (inst.func3)
             {
             case 0:
-                loadBits.append(24, memory[rs1 + inst.immediate][0]);
-                loadBits += memory[rs1 + inst.immediate];
+                registers[inst.rd].append(24, memory[rs1 + inst.immediate][0]);
+                registers[inst.rd] += memory[rs1 + inst.immediate];
                 break;
             case 1:
-                loadBits.append(16, memory[rs1 + inst.immediate + 1][0]);
-                loadBits += memory[rs1 + inst.immediate + 1] + memory[rs1 + inst.immediate];
+                registers[inst.rd].append(16, memory[rs1 + inst.immediate + 1][0]);
+                registers[inst.rd] += memory[rs1 + inst.immediate + 1] + memory[rs1 + inst.immediate];
                 break;
             case 2:
-                loadBits = memory[rs1 + inst.immediate + 3] + memory[rs1 + inst.immediate + 2] + memory[rs1 + inst.immediate + 1] + memory[rs1 + inst.immediate];
+                registers[inst.rd] = memory[rs1 + inst.immediate + 3] + memory[rs1 + inst.immediate + 2] + memory[rs1 + inst.immediate + 1] + memory[rs1 + inst.immediate];
                 break;
             case 4:
-                loadBits.append(24, '0');
-                loadBits += memory[rs1 + inst.immediate];
+                registers[inst.rd].append(24, '0');
+                registers[inst.rd] += memory[rs1 + inst.immediate];
                 break;
             case 5:
-                loadBits.append(16, '0');
-                loadBits += memory[rs1 + inst.immediate + 1] + memory[rs1 + inst.immediate];
+                registers[inst.rd].append(16, '0');
+                registers[inst.rd] += memory[rs1 + inst.immediate + 1] + memory[rs1 + inst.immediate];
                 break;
 
             default:
                 break;
             }
-            registers[inst.rd] = loadBits;
         }
     }
 
@@ -375,4 +374,54 @@ void execute(Instruction inst, string registers[], string memory[], int &pc)
     }
 }
 
+// int main()
+// {
+//     Instruction inst;
+//     inst.opcode = "0010111";
+//     inst.type = 'j';
+//     inst.rd = 5;
+//     inst.func3 = 4;
+//     inst.rs1 = 2;
+//     inst.rs2 = 10;
+//     inst.immediate = 5;
+//     inst.func7 = 0;
+
+//     string registers[32];
+//     string memory[80000];
+//     int pc = 5;
+//     for (int i = 0; i < 32; i++)
+//     {
+//         registers[i] = "";
+//         registers[i].append(32, '0');
+//     }
+
+//     memory[0] = "01000001";
+//     memory[1] = "01000010";
+//     memory[2] = "01000011";
+//     memory[3] = "01000100";
+
+//     registers[inst.rs2] = "";
+//     registers[inst.rs2].append(31, '1');
+//     registers[inst.rs2] += "0";
+
+//     // registers[inst.rs1].erase(29, 3);
+//     // registers[inst.rs1] += "111";
+
+//     registers[inst.rs1].erase(29, 3);
+//     registers[inst.rs1] += "101";
+
+//     execute(inst, registers, memory, pc);
+
+//     for (int i = 0; i < 32; i++)
+//     {
+//         cout << i << ":\t" << registers[i] << endl;
+//     }
+
+//     for (int i = 0; i < 4; i++)
+//     {
+//         cout << memory[i] << endl;
+//     }
+
+//     cout << pc << endl;
+// }
 #endif // __EXECUTE_H__
