@@ -14,27 +14,6 @@ void displayB(Instruction, string ABIname[]);
 void displayU(Instruction, string ABIname[]);
 void displayJ(Instruction, string ABIname[]);
 
-// int main()
-// {
-//     Instruction InstR = {0, 8, 8, 9, 0, 0, 'r', "0110011"};
-//     Instruction InstI0 = {0, 6, 8, 0, 5, 1038, 'i', "0010011"};
-//     Instruction InstI1 = {0, 6, 8, 0, 5, 8, 'i', "0000011"};
-//     Instruction InstI2 = {0, 6, 8, 0, 0, 0, 'i', "1110011"};
-//     Instruction InstS = {0, 0, 30, 28, 2, 16, 's', "0100011"};
-//     Instruction InstB = {0, 0, 0, 0, 1, 500, 'b', "1100011"};
-//     Instruction InstU = {0, 5, 0, 0, 0, 554580, 'u', "0110111"};
-//     Instruction InstJ = {0, 1, 0, 0, 0, 1, 'j', "1101111"};
-//     displayInst(InstR);
-//     displayInst(InstI0);
-//     displayInst(InstI1);
-//     displayInst(InstI2);
-//     displayInst(InstS);
-//     displayInst(InstB);
-//     displayInst(InstU);
-//     displayInst(InstJ);
-//     return 0;
-// }
-
 void displayInst(Instruction Inst)
 {
     string ABIname[32] = {"zero", "ra", "sp", "gp", "tp", "t0", "t1", "t2", "s0", "s1",

@@ -85,7 +85,6 @@ string checkForDecompression(string memory[], Instruction &inst, int pc)
 {
     string halfword = memory[pc + 1] + memory[pc];
     string word = "";
-    // cout << halfword << endl;
 
     if (halfword.substr(14, 2) != "11" && !inst.isCompressed)
     {
@@ -104,8 +103,7 @@ string checkForDecompression(string memory[], Instruction &inst, int pc)
 void runDisplayAtExecution(string memory[], Instruction instructions[], string registers[])
 {
     int pc = 0;
-    int i = 0;
-    while (pc < 65535 && i < 10)
+    while (pc < 65535)
     {
         if ((memory[pc + 1] + memory[pc]) == "0000000000000000")
         {
@@ -115,11 +113,10 @@ void runDisplayAtExecution(string memory[], Instruction instructions[], string r
         if (!instructions[pc].isTranslated)
         {
             string word = checkForDecompression(memory, instructions[pc], pc);
-            // cout << word << endl;
             instructions[pc].opcode = word.substr(25, 7);
             instructions[pc].type = getType(instructions[pc].opcode);
             translate(instructions[pc], word);
-            cout << i << ":\t" << pc << ":\t";
+            cout << pc << ":\t";
             displayInst(instructions[pc]);
         }
         for (int i = 65536; i < 65568; i++)
@@ -127,15 +124,12 @@ void runDisplayAtExecution(string memory[], Instruction instructions[], string r
             cout << memory[i] << endl;
         }
         execute(instructions[pc], registers, memory, pc);
-
-        i++;
     }
 }
 
 void runDisplayAll(string memory[], Instruction instructions[], string registers[])
 {
     int pc = 0;
-    int i = 0;
     while (pc < 65535)
     {
         if ((memory[pc + 1] + memory[pc]) == "0000000000000000")
@@ -144,7 +138,6 @@ void runDisplayAll(string memory[], Instruction instructions[], string registers
             continue;
         }
         string word = checkForDecompression(memory, instructions[pc], pc);
-        // cout << word << endl;
         instructions[pc].opcode = word.substr(25, 7);
         instructions[pc].type = getType(instructions[pc].opcode);
         translate(instructions[pc], word);
@@ -153,10 +146,9 @@ void runDisplayAll(string memory[], Instruction instructions[], string registers
         pc += instructions[pc].isCompressed ? 2 : 4;
     }
     pc = 0;
-    while (pc < 65535 && i < 300)
+    while (pc < 65535)
     {
         execute(instructions[pc], registers, memory, pc);
-        i++;
     }
 }
 
