@@ -62,7 +62,6 @@ void executeRType(Instruction inst, string registers[], string memory[])
     case 4:
         rs1 = binaryToDec(registers[inst.rs1], true);
         rs2 = binaryToDec(registers[inst.rs2], true);
-        cout << rs1 << " " << rs2 << endl;
         XOR = rs1 xor rs2;
         registers[inst.rd] = decToBinary(XOR);
         break;
